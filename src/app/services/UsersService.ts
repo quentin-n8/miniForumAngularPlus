@@ -51,4 +51,8 @@ export class UsersService {
     login(user: User): Observable<User> {
         return this.httpClient.post<User>(this.apiUrl + 'login', user);
     }
+
+    updateUser(user: User): Observable<User> {
+        return this.httpClient.patch<User>(this.apiUrl + 'api/user/' + user.id, user);
+    }
 }

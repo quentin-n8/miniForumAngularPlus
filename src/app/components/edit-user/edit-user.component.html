@@ -1,0 +1,27 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <mat-label>Modifier le nom d'utilisateur</mat-label>
+        <input type="text" matInput required formControlName="username">
+        <mat-error *ngIf="form.controls.username.invalid">{{ getErrorMessage('username') }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Modifier le mot de passe</mat-label>
+        <input type="password" matInput required formControlName="password">
+        <mat-error *ngIf="form.controls.password.invalid">{{ getErrorMessage('password') }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Confirmer le nouveau mot de passe</mat-label>
+        <input type="password" matInput required formControlName="passwordConfirm">
+        <mat-error *ngIf="form.controls.passwordConfirm.invalid">{{ getErrorMessage('passwordConfirm') }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Entrer le mot de passe actuel</mat-label>
+        <input type="password" matInput required formControlName="oldPassword">
+        <mat-error *ngIf="form.controls.oldPassword.invalid">{{ getErrorMessage('oldPassword') }}</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary">Modifier mon compte</button>
+</form>
