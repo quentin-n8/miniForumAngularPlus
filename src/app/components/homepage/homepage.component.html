@@ -21,16 +21,16 @@
     </mat-form-field>
 
     <ul>
-        <li *ngFor="let topic of topics">
+        <li *ngFor="let topic of filteredTopics" [title]="topic | topicInfos">
             <a [routerLink]="'topic/' + topic.id" *ngIf="editMode !== topic">{{ topic.title }}</a>
 
-            <mat-form-field *ngIf="editMode === topic">
+            <mat-form-field *ngIf="editMode === topic && connectedUser">
                 <mat-label>Titre</mat-label>
                 <input type="text" matInput required [formControl]="editTopicControl">
                 <mat-error *ngIf="editTopicControl.invalid">{{ getErrorMessage(null, editTopicControl) }}</mat-error>
             </mat-form-field>
             
-            <div class="action-buttons-container">
+            <div class="action-buttons-container" *ngIf="connectedUser">
                 <button mat-raised-button color="primary" *ngIf="editMode !== topic" (click)="onChangeEditMode(topic)">Modifier</button>
                 <button mat-raised-button color="accent" *ngIf="editMode === topic" (click)="onEditTopic(topic)">Enregistrer</button>
 

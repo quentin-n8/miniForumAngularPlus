@@ -4,18 +4,18 @@
         <button mat-raised-button color="primary" (click)="onRefreshMessages()">Actualiser les messages</button>
     </div>
     
-    <p id="topic-infos">TODO : Posté le 15/05/2021 à 14:15 par Toto</p>
+    <p id="topic-infos">{{ topic | topicInfos }}</p>
     
     <ul>
         <li *ngFor="let message of topic.messages">
-            <h3>TODO : Par Titi, le 15/06/2021 à 15:36</h3>
+            <h3>{{ message | messageInfos }}</h3>
     
             <p>{{ message.content }}</p>
         </li>
     </ul>
 </div>
 
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="connectedUser">
     <mat-form-field>
         <mat-label>Message</mat-label>
         <textarea type="text" matInput cdkTextareaAutosize required formControlName="content"></textarea>

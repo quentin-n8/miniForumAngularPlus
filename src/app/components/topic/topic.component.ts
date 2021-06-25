@@ -32,6 +32,13 @@ export class TopicComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.topicsService.getTopic(this.route.snapshot.params['id']).subscribe((topic: Topic) => {
+            topic.date = new Date(topic.date);
+
+            topic.messages = topic.messages!.map((message: Message) => {
+                message.date = new Date(message.date);
+                return message;
+            });
+            
             this.topic = topic;
         });
 
@@ -48,6 +55,13 @@ export class TopicComponent implements OnInit, OnDestroy {
 
     onRefreshMessages(): void {
         this.topicsService.getTopic(this.topic.id!).subscribe((topic: Topic) => {
+            topic.date = new Date(topic.date);
+
+            topic.messages = topic.messages!.map((message: Message) => {
+                message.date = new Date(message.date);
+                return message;
+            });
+
             this.topic = topic;
             this.snackBar.open('Messages actualisés', 'Fermer', { duration: 3000 });
         }, error => {

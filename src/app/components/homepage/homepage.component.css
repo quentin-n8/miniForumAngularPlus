@@ -31,6 +31,11 @@ form {
     margin-top: var(--small-margin);
 }
 
+#topic-form-button:hover {
+    background-color: white;
+    color: var(--primary-color);
+}
+
 .action-buttons-container {
     display: flex;
     justify-content: space-between;

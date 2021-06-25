@@ -19,7 +19,8 @@ export class HomepageComponent implements OnInit {
     connectedUser!: User;
     connectedUserSubscription!: Subscription;
 
-    topics?: Topic[];
+    topics: Topic[] = [];
+    filteredTopics: Topic[] = [];
     topicsSubscription?: Subscription;
 
     editMode?: Topic;
@@ -34,19 +35,31 @@ export class HomepageComponent implements OnInit {
 
     ngOnInit(): void {
         this.usersService.connectedUserSubject.subscribe((user: User) => {
-            this.connectedUser = user;            
+            this.connectedUser = user;
 
             this.form = this.formBuilder.group({
                 title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
                 content: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(3000)]],
             });
-
-            this.filterControl = this.formBuilder.control('');
         });
 
         this.usersService.emitConnectedUser();
 
-        this.topicsService.topicsSubject.subscribe((topics: Topic[]) => this.topics = topics);
+        this.topicsService.topicsSubject.subscribe((topics: Topic[]) => {
+            this.topics = topics;
+            this.filteredTopics = topics;
+
+            this.filterControl = this.formBuilder.control('');
+
+            this.filterControl.valueChanges.subscribe(filterValue => {
+                if (filterValue) {
+                    this.filteredTopics = this.topics.filter(topic => topic.title.includes(filterValue) || topic.author!.username.includes(filterValue));
+                } else {
+                    this.filteredTopics = this.topics;
+                }
+            });
+        });
+
         this.topicsService.emitTopics();
 
         this.editTopicControl = this.formBuilder.control(['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]]);

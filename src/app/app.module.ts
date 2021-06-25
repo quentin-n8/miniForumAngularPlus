@@ -16,6 +16,9 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { TopicComponent } from './components/topic/topic.component';
 
+import { TopicInfosPipe } from './pipes/TopicInfos.pipe';
+import { MessageInfosPipe } from './pipes/MessageInfos.pipe';
+
 import { UsersService } from './services/UsersService';
 import { TopicsService } from './services/TopicsService';
 import { MessagesService } from './services/MessagesService';
@@ -34,7 +37,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         LoginComponent,
         SignInComponent,
         LogoutComponent,
-        TopicComponent
+        TopicComponent,
+        TopicInfosPipe,
+        MessageInfosPipe
     ],
     imports: [
         BrowserModule,
