@@ -1,0 +1,41 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()" *ngIf="connectedUser">
+    <mat-form-field>
+        <mat-label>Titre</mat-label>
+        <input type="text" matInput required formControlName="title">
+        <mat-error *ngIf="form.controls.title.invalid">{{ getErrorMessage('title') }}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+        <mat-label>Message</mat-label>
+        <textarea type="text" matInput cdkTextareaAutosize required formControlName="content"></textarea>
+        <mat-error *ngIf="form.controls.content.invalid">{{ getErrorMessage('content') }}</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" id="topic-form-button">Ajouter un nouveau sujet</button>
+</form>
+
+<section>
+    <mat-form-field>
+        <mat-label>Filtrer par titre ou par auteur</mat-label>
+        <input type="text" matInput [formControl]="filterControl">
+    </mat-form-field>
+
+    <ul>
+        <li *ngFor="let topic of topics">
+            <a [routerLink]="'topic/' + topic.id" *ngIf="editMode !== topic">{{ topic.title }}</a>
+
+            <mat-form-field *ngIf="editMode === topic">
+                <mat-label>Titre</mat-label>
+                <input type="text" matInput required [formControl]="editTopicControl">
+                <mat-error *ngIf="editTopicControl.invalid">{{ getErrorMessage(null, editTopicControl) }}</mat-error>
+            </mat-form-field>
+            
+            <div class="action-buttons-container">
+                <button mat-raised-button color="primary" *ngIf="editMode !== topic" (click)="onChangeEditMode(topic)">Modifier</button>
+                <button mat-raised-button color="accent" *ngIf="editMode === topic" (click)="onEditTopic(topic)">Enregistrer</button>
+
+                <button mat-raised-button color="warn">Supprimer</button>
+            </div>
+        </li>
+    </ul>
+</section>

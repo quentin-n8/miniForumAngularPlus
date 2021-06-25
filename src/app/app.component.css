@@ -16,8 +16,6 @@ li {
 }
 
 a {
-    color: var(--primary-color);
-    text-decoration: none;
     display: inline-block;
     width: 100%;
 }

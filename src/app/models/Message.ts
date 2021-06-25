@@ -4,7 +4,8 @@ import { User } from "./User";
 export interface Message {
     id?: number;
     content: string;
-    date: Date;
-    author: User;
-    topic: Topic;
+    date: Date | number;
+    author?: User;
+    user?: User;
+    topic?: Topic;
 }

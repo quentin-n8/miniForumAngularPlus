@@ -1,12 +1,17 @@
 :root {
     --large-margin: 40px;
     --small-margin: 20px;
-    --primary-color: #1A237E;
+    --primary-color: #3F51B5;
     --accent-color: #D81B60;
     --warn-color: #B71C1C;
 }
 
 body {
-    margin: 40px 40px 0;
+    margin: 40px;
     font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
 }

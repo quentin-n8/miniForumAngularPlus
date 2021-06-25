@@ -17,6 +17,7 @@ import { LogoutComponent } from './components/logout/logout.component';
 import { TopicComponent } from './components/topic/topic.component';
 
 import { UsersService } from './services/UsersService';
+import { TopicsService } from './services/TopicsService';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -47,7 +48,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         MatSnackBarModule
     ],
     providers: [
-        UsersService
+        UsersService,
+        TopicsService
     ],
     bootstrap: [AppComponent]
 })
