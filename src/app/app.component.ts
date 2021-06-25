@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from 'rxjs';
 import { User } from './models/User';
+import { UsersService } from './services/UsersService';
 
 @Component({
     selector: 'app-root',
@@ -8,14 +10,19 @@ import { User } from './models/User';
 })
 export class AppComponent implements OnInit, OnDestroy {
     connectedUser?: User;
+    connectedUserSubscription?: Subscription
 
-    constructor() { }
+    constructor(private usersService: UsersService) { }
 
     ngOnInit(): void {
-        
+        this.connectedUserSubscription = this.usersService.connectedUserSubject.subscribe((user: User) => {
+            this.connectedUser = user;
+        });
     }
 
     ngOnDestroy(): void {
-
+        if (this.connectedUserSubscription) {
+            this.connectedUserSubscription.unsubscribe();
+        }
     }
 }
