@@ -10,7 +10,7 @@ export class UsersService {
     users: User[] = [];
     usersSubject = new Subject<User[]>();
 
-    connectedUser!: User;
+    connectedUser?: User;
     connectedUserSubject = new Subject<User>();
 
     constructor(private httpClient: HttpClient) {
@@ -25,14 +25,6 @@ export class UsersService {
         this.connectedUserSubject.next(this.connectedUser);
     }
 
-    createNewUser(user: User): Observable<User> {
-        return this.httpClient.post<User>(this.apiUrl + 'api/user', user);
-    }
-
-    login(user: User): Observable<User> {
-        return this.httpClient.post<User>(this.apiUrl + 'login', user);
-    }
-
     setConnectedUserFromLocalStorage(): void {
         if (localStorage.getItem('connectedUser')) {
             this.connectedUser = JSON.parse(localStorage.getItem('connectedUser')!);
@@ -43,5 +35,20 @@ export class UsersService {
     saveConnectedUserToLocalStorage(user: User): void {
         localStorage.setItem('connectedUser', JSON.stringify(user));
         this.setConnectedUserFromLocalStorage();
+    }
+
+    removeConnectedUserFromLocalStorage(): void {
+        localStorage.removeItem('connectedUser');
+
+        this.connectedUser = undefined;
+        this.emitConnectedUser();
+    }
+
+    createNewUser(user: User): Observable<User> {
+        return this.httpClient.post<User>(this.apiUrl + 'api/user', user);
+    }
+
+    login(user: User): Observable<User> {
+        return this.httpClient.post<User>(this.apiUrl + 'login', user);
     }
 }
