@@ -1,1 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+    --large-margin: 40px;
+    --small-margin: 20px;
+    --primary-color: #1A237E;
+    --accent-color: #D81B60;
+    --warn-color: #B71C1C;
+}
+
+body {
+    margin: 40px 40px 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+}
