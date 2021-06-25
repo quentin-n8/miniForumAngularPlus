@@ -1,0 +1,30 @@
+mat-form-field, button:not(#topic-title-header button) {
+    width: 100%;
+}
+
+li {
+    padding: 10px;
+    background-color: rgb(236, 236, 236);
+    border: 2px solid var(--primary-color);
+}
+
+li:not(li:last-child) {
+    margin-bottom: var(--small-margin);
+}
+
+ul {
+    margin-bottom: var(--large-margin);
+}
+
+#message-form-button {
+    margin-top: var(--small-margin);
+}
+
+#topic-title-header {
+    display: flex;
+    justify-content: space-between;
+}
+
+#topic-infos {
+    margin-bottom: var(--small-margin);
+}

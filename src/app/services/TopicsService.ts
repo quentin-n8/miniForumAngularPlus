@@ -29,6 +29,10 @@ export class TopicsService {
         return this.httpClient.get<Topic[]>(this.apiUrl, { observe: 'body' });
     }
 
+    getTopic(id: number): Observable<Topic> {
+        return this.httpClient.get<Topic>(this.apiUrl + id, { observe: 'body' });
+    }
+
     createNewTopic(topic: Topic): Observable<Topic> {
         return this.httpClient.post<Topic>(this.apiUrl, topic);
     }

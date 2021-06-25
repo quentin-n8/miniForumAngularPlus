@@ -1,0 +1,26 @@
+<div *ngIf="topic">
+    <div id="topic-title-header">
+        <h2>{{ topic.title }}</h2>
+        <button mat-raised-button color="primary" (click)="onRefreshMessages()">Actualiser les messages</button>
+    </div>
+    
+    <p id="topic-infos">TODO : Posté le 15/05/2021 à 14:15 par Toto</p>
+    
+    <ul>
+        <li *ngFor="let message of topic.messages">
+            <h3>TODO : Par Titi, le 15/06/2021 à 15:36</h3>
+    
+            <p>{{ message.content }}</p>
+        </li>
+    </ul>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+        <mat-label>Message</mat-label>
+        <textarea type="text" matInput cdkTextareaAutosize required formControlName="content"></textarea>
+        <mat-error *ngIf="true">{{ getErrorMessage('content') }}</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" id="message-form-button">Répondre au sujet</button>
+</form>

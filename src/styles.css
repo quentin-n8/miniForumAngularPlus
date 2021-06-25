@@ -11,7 +11,29 @@ body {
     font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+h2 {
+    margin: 0;
+    font-weight: normal;
+}
+
+h3 {
+    margin: 0;
+    font-weight: normal;
+    font-size: 1em;
+    margin-bottom: var(--small-margin);
+}
+
+p {
+    margin: 0;
+}
+
 a {
     color: var(--primary-color);
     text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }

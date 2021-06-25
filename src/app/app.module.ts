@@ -18,6 +18,7 @@ import { TopicComponent } from './components/topic/topic.component';
 
 import { UsersService } from './services/UsersService';
 import { TopicsService } from './services/TopicsService';
+import { MessagesService } from './services/MessagesService';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -49,7 +50,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     ],
     providers: [
         UsersService,
-        TopicsService
+        TopicsService,
+        MessagesService
     ],
     bootstrap: [AppComponent]
 })
