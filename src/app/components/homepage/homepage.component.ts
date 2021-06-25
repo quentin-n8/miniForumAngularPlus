@@ -57,10 +57,10 @@ export class HomepageComponent implements OnInit {
         this.editTopicControl.setValue(topic.title);
     }
 
-    onEditTopic(topic: Topic) {
+    onEditTopic(topic: Topic): void {
         if (this.editTopicControl.valid) {
             this.topicsService.updateTopic(topic, this.editTopicControl.value).subscribe((topic: Topic) => {
-                this.topicsService.topics = this.topicsService.topics.map(topicElt => {
+                this.topicsService.topics = this.topicsService.topics.map((topicElt: Topic) => {
                     if (topicElt.id === topic.id) {
                         topicElt.title = topic.title;
                     }
@@ -77,6 +77,19 @@ export class HomepageComponent implements OnInit {
                 this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
             });
         }
+    }
+
+    onDeleteTopic(topic: Topic): void {
+        this.topicsService.deleteTopic(topic).subscribe(response => {
+            this.topicsService.topics = this.topicsService.topics.filter(topicElt => topicElt.id !== topic.id);
+            this.topicsService.emitTopics();
+
+            this.editMode = undefined;
+
+            this.snackBar.open('Le sujet a bien été supprimé', 'Fermer', { duration: 3000 });
+        }, error => {
+            this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
+        })
     }
 
     onSubmit(): void {

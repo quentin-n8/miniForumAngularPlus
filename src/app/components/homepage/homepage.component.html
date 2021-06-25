@@ -34,7 +34,7 @@
                 <button mat-raised-button color="primary" *ngIf="editMode !== topic" (click)="onChangeEditMode(topic)">Modifier</button>
                 <button mat-raised-button color="accent" *ngIf="editMode === topic" (click)="onEditTopic(topic)">Enregistrer</button>
 
-                <button mat-raised-button color="warn">Supprimer</button>
+                <button mat-raised-button color="warn" (click)="onDeleteTopic(topic)">Supprimer</button>
             </div>
         </li>
     </ul>

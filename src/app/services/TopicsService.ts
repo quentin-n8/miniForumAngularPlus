@@ -36,4 +36,8 @@ export class TopicsService {
     updateTopic(topic: Topic, title: string): Observable<Topic> {
         return this.httpClient.patch<Topic>(this.apiUrl + topic.id, { title });
     }
+
+    deleteTopic(topic: Topic): Observable<any> {
+        return this.httpClient.delete(this.apiUrl + topic.id);
+    }
 }
