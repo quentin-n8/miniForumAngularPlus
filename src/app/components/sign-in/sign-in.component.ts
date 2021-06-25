@@ -1,5 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { User } from 'src/app/models/User';
 import { UsersService } from 'src/app/services/UsersService';
@@ -9,13 +10,14 @@ import { UsersService } from 'src/app/services/UsersService';
     templateUrl: './sign-in.component.html',
     styleUrls: ['./sign-in.component.css']
 })
-export class SignInComponent implements OnInit, OnDestroy {
+export class SignInComponent implements OnInit {
     form!: FormGroup;
 
     constructor(
         private formBuilder: FormBuilder,
         private usersService: UsersService,
-        private router: Router
+        private router: Router,
+        private snackBar: MatSnackBar
     ) { }
 
     ngOnInit(): void {
@@ -36,18 +38,20 @@ export class SignInComponent implements OnInit, OnDestroy {
             }
     
             this.usersService.createNewUser(user).subscribe((user: User) => {
-                this.usersService.connectedUser = user;
-                this.usersService.emitConnectedUser();
+                if (this.form.value.rememberMe) {
+                    this.usersService.saveConnectedUserToLocalStorage(user);
+                } else {
+                    this.usersService.connectedUser = user;
+                    this.usersService.emitConnectedUser();
+                }
+
+                this.snackBar.open('Votre compte a bien été créé', 'Fermer', { duration: 3000 });
     
                 this.router.navigate(['/']);
             }, error => {
-                console.log(error);
+                this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
             });
         }
-    }
-
-    ngOnDestroy(): void {
-
     }
 
     getErrorMessage(formControlName: string): string|void {

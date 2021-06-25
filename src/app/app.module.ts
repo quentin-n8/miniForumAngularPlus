@@ -22,6 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
     declarations: [
@@ -42,7 +43,8 @@ import { MatButtonModule } from '@angular/material/button';
         MatFormFieldModule,
         MatInputModule,
         MatCheckboxModule,
-        MatButtonModule
+        MatButtonModule,
+        MatSnackBarModule
     ],
     providers: [
         UsersService
