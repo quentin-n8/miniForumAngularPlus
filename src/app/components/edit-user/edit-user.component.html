@@ -7,13 +7,13 @@
 
     <mat-form-field>
         <mat-label>Modifier le mot de passe</mat-label>
-        <input type="password" matInput required formControlName="password">
+        <input type="password" matInput formControlName="password">
         <mat-error *ngIf="form.controls.password.invalid">{{ getErrorMessage('password') }}</mat-error>
     </mat-form-field>
 
     <mat-form-field>
         <mat-label>Confirmer le nouveau mot de passe</mat-label>
-        <input type="password" matInput required formControlName="passwordConfirm">
+        <input type="password" matInput [required]="form.value.password !== ''" formControlName="passwordConfirm">
         <mat-error *ngIf="form.controls.passwordConfirm.invalid">{{ getErrorMessage('passwordConfirm') }}</mat-error>
     </mat-form-field>
 

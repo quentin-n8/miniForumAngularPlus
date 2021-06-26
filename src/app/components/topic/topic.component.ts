@@ -43,7 +43,7 @@ export class TopicComponent implements OnInit, OnDestroy {
         });
 
         this.form = this.formBuilder.group({
-            content: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(3000)]],
+            content: ['', [Validators.minLength(5), Validators.maxLength(3000)]],
         });
 
         this.usersService.connectedUserSubject.subscribe((user: User) => {

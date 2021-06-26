@@ -24,9 +24,9 @@ export class SignInComponent implements OnInit {
 
     ngOnInit(): void {
         this.form = this.formBuilder.group({
-            username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)], this.uniqueNameValidator()],
-            password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordValidator()]],
-            passwordConfirm: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordConfirmValidator()]],
+            username: ['', [Validators.minLength(3), Validators.maxLength(50)], this.uniqueNameValidator()],
+            password: ['', [Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordValidator()]],
+            passwordConfirm: ['', [Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordConfirmValidator()]],
             rememberMe: false
         });
     }

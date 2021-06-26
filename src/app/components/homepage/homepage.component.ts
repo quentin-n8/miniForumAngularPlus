@@ -38,8 +38,8 @@ export class HomepageComponent implements OnInit {
             this.connectedUser = user;
 
             this.form = this.formBuilder.group({
-                title: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
-                content: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(3000)]],
+                title: ['', [Validators.minLength(5), Validators.maxLength(100)]],
+                content: ['', [Validators.minLength(5), Validators.maxLength(3000)]],
             });
         });
 
@@ -62,7 +62,7 @@ export class HomepageComponent implements OnInit {
 
         this.topicsService.emitTopics();
 
-        this.editTopicControl = this.formBuilder.control(['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]]);
+        this.editTopicControl = this.formBuilder.control(['', [Validators.minLength(5), Validators.maxLength(100)]]);
     }
 
     onChangeEditedTopic(topic: Topic): void {
@@ -125,7 +125,7 @@ export class HomepageComponent implements OnInit {
 
                 Object.keys(this.form.controls).forEach(formControlName => {
                     this.form.controls[formControlName].setErrors(null);
-                  });
+                });
             }, error => {
                 this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
             });

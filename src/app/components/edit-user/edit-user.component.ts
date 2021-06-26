@@ -31,10 +31,10 @@ export class EditUserComponent implements OnInit, OnDestroy {
             this.connectedUser = user;
 
             this.form = this.formBuilder.group({
-                username: [user.username, [Validators.required, Validators.minLength(3), Validators.maxLength(50)], this.uniqueNameValidator()],
-                password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordValidator()]],
-                passwordConfirm: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordConfirmValidator()]],
-                oldPassword: ['', Validators.required]
+                username: [user.username, [Validators.minLength(3), Validators.maxLength(50)], this.uniqueNameValidator()],
+                password: ['', [Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordValidator()]],
+                passwordConfirm: ['', [Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordConfirmValidator()]],
+                oldPassword: ''
             });
         });
 
@@ -81,6 +81,11 @@ export class EditUserComponent implements OnInit, OnDestroy {
     uniqueNameValidator(): AsyncValidatorFn {
         return (control: AbstractControl): Observable<ValidationErrors | null> => {
             return new Observable<ValidationErrors | null>(observer => {
+                if (control.value === this.connectedUser.username) {
+                    observer.next(null);
+                    observer.complete();
+                }
+
                 this.usersService.getUsers().subscribe((users: User[]) => {
                     if (users.find(user => user.username === control.value)) {
                         observer.next({uniqueName: {value: control.value}});
