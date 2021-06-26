@@ -79,24 +79,25 @@ export class TopicComponent implements OnInit, OnDestroy {
             }
     
             this.messagesService.postNewMessage(message).subscribe((message: Message) => {
-                this.topicsService.topics = this.topicsService.topics.map((topic: Topic) => {
-                    if (topic.id === this.topic.id) {
-                        topic.messages.push(message);
-                        this.topic = topic;
-                    }
+                this.topicsService.getTopic(this.topic.id!).subscribe((topic: Topic) => {
+                    topic.date = new Date(topic.date);
+        
+                    topic.messages = topic.messages.map((message: Message) => {
+                        message.date = new Date(message.date);
+                        return message;
+                    });
+        
+                    this.topic = topic;
+                    this.topicsService.emitTopics();
 
-                    return topic;
+                    this.snackBar.open('Votre message a bien été envoyé', 'Fermer', { duration: 3000 });
+
+                    this.form.reset();
+
+                    Object.keys(this.form.controls).forEach(formControlName => {
+                        this.form.controls[formControlName].setErrors(null);
+                    });
                 });
-
-                this.topicsService.emitTopics();
-
-                this.snackBar.open('Votre message a bien été envoyé', 'Fermer', { duration: 3000 });
-
-                this.form.reset();
-
-                Object.keys(this.form.controls).forEach(formControlName => {
-                    this.form.controls[formControlName].setErrors(null);
-                  });
             }, error => {
                 this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
             });
