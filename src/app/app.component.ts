@@ -9,13 +9,13 @@ import { UsersService } from './services/UsersService';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-    connectedUser?: User;
-    connectedUserSubscription?: Subscription
+    connectedUser: User;
+    connectedUserSubscription: Subscription
 
     constructor(private usersService: UsersService) { }
 
     ngOnInit(): void {
-        this.connectedUserSubscription = this.usersService.connectedUserSubject.subscribe((user: User | undefined) => {
+        this.connectedUserSubscription = this.usersService.connectedUserSubject.subscribe((user: User) => {
             this.connectedUser = user;
         });
 

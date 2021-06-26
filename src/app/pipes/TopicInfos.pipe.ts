@@ -6,6 +6,6 @@ import { Topic } from '../models/Topic';
 export class TopicInfosPipe implements PipeTransform {
     transform(topic: Topic): string {
         const datePipe = new DatePipe('en');
-        return `Posté le ${datePipe.transform(topic.date, 'dd/MM/yyyy')} à ${datePipe.transform(topic.date, 'hh:mm')} par ${topic.author!.username}`;
+        return `Posté le ${datePipe.transform(topic.date, 'dd/MM/yyyy')} à ${datePipe.transform(topic.date, 'hh:mm')} par ${topic.author.username}`;
     }
 }

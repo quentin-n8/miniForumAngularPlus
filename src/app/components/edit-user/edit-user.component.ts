@@ -12,9 +12,9 @@ import { UsersService } from 'src/app/services/UsersService';
     styleUrls: ['./edit-user.component.css']
 })
 export class EditUserComponent implements OnInit, OnDestroy {
-    form!: FormGroup;
-    connectedUser?: User;
-    connectedUserSubscription?: Subscription;
+    form: FormGroup;
+    connectedUser: User;
+    connectedUserSubscription: Subscription;
     regexPasswordPattern = '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{5,50}';
 
     constructor(
@@ -46,7 +46,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
                 username: this.form.value.username,
                 password: this.form.value.password,
                 passwordConfirm: this.form.value.passwordConfirm,
-                oldPassword: this.form.value.oldPassword
+                oldPassword: this.form.value.oldPassword,
+                messages: [],
+                topics: []
             }
     
             this.usersService.updateUser(user).subscribe((user: User) => {

@@ -11,7 +11,7 @@ import { UsersService } from 'src/app/services/UsersService';
     styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-    form!: FormGroup;
+    form: FormGroup;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -32,7 +32,9 @@ export class LoginComponent implements OnInit {
         if (this.form.valid) {
             const user: User = {
                 username: this.form.value.username,
-                password: this.form.value.password
+                password: this.form.value.password,
+                messages: [],
+                topics: []
             }
 
             this.usersService.login(user).subscribe((user: User) => {

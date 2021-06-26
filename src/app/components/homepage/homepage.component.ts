@@ -13,18 +13,18 @@ import { UsersService } from 'src/app/services/UsersService';
     styleUrls: ['./homepage.component.css']
 })
 export class HomepageComponent implements OnInit {
-    form!: FormGroup;
-    filterControl!: FormControl;
+    form: FormGroup;
+    filterControl: FormControl;
 
-    connectedUser!: User;
-    connectedUserSubscription!: Subscription;
+    connectedUser: User;
+    connectedUserSubscription: Subscription;
 
     topics: Topic[] = [];
     filteredTopics: Topic[] = [];
-    topicsSubscription?: Subscription;
+    topicsSubscription: Subscription;
 
-    editMode?: Topic;
-    editTopicControl!: FormControl;
+    editedTopic?: Topic;
+    editTopicControl: FormControl;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -53,7 +53,7 @@ export class HomepageComponent implements OnInit {
 
             this.filterControl.valueChanges.subscribe(filterValue => {
                 if (filterValue) {
-                    this.filteredTopics = this.topics.filter(topic => topic.title.includes(filterValue) || topic.author!.username.includes(filterValue));
+                    this.filteredTopics = this.topics.filter(topic => topic.title.includes(filterValue) || topic.author.username.includes(filterValue));
                 } else {
                     this.filteredTopics = this.topics;
                 }
@@ -65,8 +65,8 @@ export class HomepageComponent implements OnInit {
         this.editTopicControl = this.formBuilder.control(['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]]);
     }
 
-    onChangeEditMode(topic: Topic): void {
-        this.editMode = this.editMode === topic ? undefined : topic;
+    onChangeEditedTopic(topic: Topic): void {
+        this.editedTopic = (this.editedTopic === topic) ? undefined : topic;
         this.editTopicControl.setValue(topic.title);
     }
 
@@ -85,7 +85,7 @@ export class HomepageComponent implements OnInit {
 
                  this.snackBar.open('Le titre du sujet a bien été modifié', 'Fermer', { duration: 3000 });
 
-                 this.editMode = undefined;
+                 this.editedTopic = undefined;
             }, error => {
                 this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
             });
@@ -97,7 +97,7 @@ export class HomepageComponent implements OnInit {
             this.topicsService.topics = this.topicsService.topics.filter(topicElt => topicElt.id !== topic.id);
             this.topicsService.emitTopics();
 
-            this.editMode = undefined;
+            this.editedTopic = undefined;
 
             this.snackBar.open('Le sujet a bien été supprimé', 'Fermer', { duration: 3000 });
         }, error => {
@@ -110,8 +110,9 @@ export class HomepageComponent implements OnInit {
             const topic: Topic = {
                 title: this.form.value.title,
                 date: new Date().getTime(),
-                user: this.connectedUser,
+                author: this.connectedUser,
                 content: this.form.value.content,
+                messages: []
             };
 
             this.topicsService.createNewTopic(topic).subscribe((topic: Topic) => {
@@ -132,7 +133,7 @@ export class HomepageComponent implements OnInit {
     }
 
     getErrorMessage(formControlName: string | null, formControlParam?: FormControl): string|void {
-        const formControl = formControlName !== null ? this.form.controls[formControlName] : formControlParam;
+        const formControl = (formControlName !== null) ? this.form.controls[formControlName] : formControlParam;
 
         if (formControl!.hasError('required')) {
             return 'Ce champ est obligatoire';

@@ -5,8 +5,7 @@ export interface Topic {
     id?: number;
     title: string;
     date: Date | number;
-    author?: User;
-    user?: User;
-    messages?: Message[];
+    author: User;
+    messages: Message[];
     content?: string;
 }

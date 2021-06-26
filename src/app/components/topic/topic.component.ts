@@ -16,10 +16,10 @@ import { UsersService } from 'src/app/services/UsersService';
     styleUrls: ['./topic.component.css']
 })
 export class TopicComponent implements OnInit, OnDestroy {
-    form!: FormGroup;
-    topic!: Topic;
-    connectedUser?: User;
-    connectedUserSubscription?: Subscription;
+    form: FormGroup;
+    topic: Topic;
+    connectedUser: User;
+    connectedUserSubscription: Subscription;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -34,7 +34,7 @@ export class TopicComponent implements OnInit, OnDestroy {
         this.topicsService.getTopic(this.route.snapshot.params['id']).subscribe((topic: Topic) => {
             topic.date = new Date(topic.date);
 
-            topic.messages = topic.messages!.map((message: Message) => {
+            topic.messages = topic.messages.map((message: Message) => {
                 message.date = new Date(message.date);
                 return message;
             });
@@ -57,7 +57,7 @@ export class TopicComponent implements OnInit, OnDestroy {
         this.topicsService.getTopic(this.topic.id!).subscribe((topic: Topic) => {
             topic.date = new Date(topic.date);
 
-            topic.messages = topic.messages!.map((message: Message) => {
+            topic.messages = topic.messages.map((message: Message) => {
                 message.date = new Date(message.date);
                 return message;
             });
@@ -74,14 +74,14 @@ export class TopicComponent implements OnInit, OnDestroy {
             const message: Message = {
                 content: this.form.value.content,
                 date: new Date().getTime(),
-                user: this.connectedUser,
+                author: this.connectedUser,
                 topic: this.topic
             }
     
             this.messagesService.postNewMessage(message).subscribe((message: Message) => {
                 this.topicsService.topics = this.topicsService.topics.map((topic: Topic) => {
                     if (topic.id === this.topic.id) {
-                        topic.messages!.push(message);
+                        topic.messages.push(message);
                         this.topic = topic;
                     }
 

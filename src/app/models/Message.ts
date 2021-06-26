@@ -5,7 +5,6 @@ export interface Message {
     id?: number;
     content: string;
     date: Date | number;
-    author?: User;
-    user?: User;
-    topic?: Topic;
+    author: User;
+    topic: Topic;
 }

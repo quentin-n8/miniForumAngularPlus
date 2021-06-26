@@ -7,6 +7,6 @@ export interface User {
     password?: string;
     passwordConfirm?: string;
     oldPassword?: string;
-    topics?: Topic[];
-    messages?: Message[];
+    topics: Topic[];
+    messages: Message[];
 }

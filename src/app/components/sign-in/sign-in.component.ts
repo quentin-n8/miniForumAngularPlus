@@ -12,7 +12,7 @@ import { UsersService } from 'src/app/services/UsersService';
     styleUrls: ['./sign-in.component.css']
 })
 export class SignInComponent implements OnInit {
-    form!: FormGroup;
+    form: FormGroup;
     regexPasswordPattern = '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{5,50}';
 
     constructor(
@@ -36,7 +36,9 @@ export class SignInComponent implements OnInit {
             const user: User = {
                 username: this.form.value.username,
                 password: this.form.value.password,
-                passwordConfirm: this.form.value.passwordConfirm
+                passwordConfirm: this.form.value.passwordConfirm,
+                messages: [],
+                topics: []
             }
     
             this.usersService.createNewUser(user).subscribe((user: User) => {
