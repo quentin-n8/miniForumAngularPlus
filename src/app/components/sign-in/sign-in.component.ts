@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, AsyncValidatorFn, FormBuilder, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
@@ -24,8 +24,8 @@ export class SignInComponent implements OnInit {
     ngOnInit(): void {
         this.form = this.formBuilder.group({
             username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)], this.uniqueNameValidator()],
-            password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-            passwordConfirm: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+            password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), this.samePasswordValidator()]],
+            passwordConfirm: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), this.samePasswordConfirmValidator()]],
             rememberMe: false
         });
     }
@@ -69,7 +69,39 @@ export class SignInComponent implements OnInit {
                 });
             });
         };
-      }
+    }
+
+    samePasswordValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            if (this.form) {
+                if (this.form.value.passwordConfirm && control.value !== this.form.controls.passwordConfirm.value) {
+                    return { samePassword: { value: control.value } };
+                }
+
+                if (this.form.controls.passwordConfirm.hasError('samePasswordConfirm')) {
+                    this.form.controls.passwordConfirm.updateValueAndValidity();
+                }
+            }
+
+            return null;
+        }
+    }
+
+    samePasswordConfirmValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            if (this.form) {
+                if (control.value !== this.form.controls.password.value) {
+                    return { samePasswordConfirm: { value: control.value } };
+                }
+
+                if (this.form.controls.password.hasError('samePassword')) {
+                    this.form.controls.password.updateValueAndValidity();
+                }
+            }
+
+            return null;
+        }
+    }
 
     getErrorMessage(formControlName: string): string|void {
         if (this.form.controls[formControlName].hasError('required')) {
@@ -86,6 +118,14 @@ export class SignInComponent implements OnInit {
 
         if (this.form.controls[formControlName].hasError('uniqueName')) {
             return 'Ce nom d\'utilisateur est déjà utilisé';
+        }
+
+        if (this.form.controls[formControlName].hasError('samePassword')) {
+            return 'Vous devez entrer le même mot de passe que celui entré dans la confirmation';
+        }
+
+        if (this.form.controls[formControlName].hasError('samePasswordConfirm')) {
+            return 'Vous devez entrer le même mot de passe que précédemment';
         }
     }
 }
