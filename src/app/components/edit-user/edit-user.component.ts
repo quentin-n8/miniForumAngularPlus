@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl, AsyncValidatorFn, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { User } from 'src/app/models/User';
 import { UsersService } from 'src/app/services/UsersService';
 
@@ -15,6 +15,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     form!: FormGroup;
     connectedUser?: User;
     connectedUserSubscription?: Subscription;
+    regexPasswordPattern = '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{5,50}';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -28,9 +29,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
             this.connectedUser = user;
 
             this.form = this.formBuilder.group({
-                username: [user.username, [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-                password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
-                passwordConfirm: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)]],
+                username: [user.username, [Validators.required, Validators.minLength(3), Validators.maxLength(50)], this.uniqueNameValidator()],
+                password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordValidator()]],
+                passwordConfirm: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordConfirmValidator()]],
                 oldPassword: ['', Validators.required]
             });
         });
@@ -67,6 +68,54 @@ export class EditUserComponent implements OnInit, OnDestroy {
         }
     }
 
+    uniqueNameValidator(): AsyncValidatorFn {
+        return (control: AbstractControl): Observable<ValidationErrors | null> => {
+            return new Observable<ValidationErrors | null>(observer => {
+                this.usersService.getUsers().subscribe((users: User[]) => {
+                    if (users.find(user => user.username === control.value)) {
+                        observer.next({uniqueName: {value: control.value}});
+                    } else {
+                        observer.next(null);
+                    }
+
+                    observer.complete();
+                });
+            });
+        };
+    }
+
+    samePasswordValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            if (this.form) {
+                if (this.form.value.passwordConfirm && control.value !== this.form.controls.passwordConfirm.value) {
+                    return { samePassword: { value: control.value } };
+                }
+
+                if (this.form.controls.passwordConfirm.hasError('samePasswordConfirm')) {
+                    this.form.controls.passwordConfirm.updateValueAndValidity();
+                }
+            }
+
+            return null;
+        }
+    }
+
+    samePasswordConfirmValidator(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            if (this.form) {
+                if (control.value !== this.form.controls.password.value) {
+                    return { samePasswordConfirm: { value: control.value } };
+                }
+
+                if (this.form.controls.password.hasError('samePassword')) {
+                    this.form.controls.password.updateValueAndValidity();
+                }
+            }
+
+            return null;
+        }
+    }
+
     getErrorMessage(formControlName: string): string|void {
         if (this.form.controls[formControlName].hasError('required')) {
             return 'Ce champ est obligatoire';
@@ -78,6 +127,22 @@ export class EditUserComponent implements OnInit, OnDestroy {
 
         if (this.form.controls[formControlName].hasError('maxlength')) {
             return 'Vous ne pouvez pas entrer plus de ' + this.form.controls[formControlName].getError('maxlength').requiredLength + ' caractères';
+        }
+
+        if (this.form.controls[formControlName].hasError('uniqueName')) {
+            return 'Ce nom d\'utilisateur est déjà utilisé';
+        }
+
+        if (this.form.controls[formControlName].hasError('samePassword')) {
+            return 'Vous devez entrer le même mot de passe que celui entré dans la confirmation';
+        }
+
+        if (this.form.controls[formControlName].hasError('samePasswordConfirm')) {
+            return 'Vous devez entrer le même mot de passe que précédemment';
+        }
+
+        if (this.form.controls[formControlName].hasError('pattern')) {
+            return 'Vous devez entrer au moins une majuscule, un chiffre et un caractère spécial';
         }
     }
 }

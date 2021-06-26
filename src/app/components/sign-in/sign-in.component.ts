@@ -13,6 +13,7 @@ import { UsersService } from 'src/app/services/UsersService';
 })
 export class SignInComponent implements OnInit {
     form!: FormGroup;
+    regexPasswordPattern = '(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{5,50}';
 
     constructor(
         private formBuilder: FormBuilder,
@@ -24,8 +25,8 @@ export class SignInComponent implements OnInit {
     ngOnInit(): void {
         this.form = this.formBuilder.group({
             username: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50)], this.uniqueNameValidator()],
-            password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), this.samePasswordValidator()]],
-            passwordConfirm: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), this.samePasswordConfirmValidator()]],
+            password: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordValidator()]],
+            passwordConfirm: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(50), Validators.pattern(this.regexPasswordPattern), this.samePasswordConfirmValidator()]],
             rememberMe: false
         });
     }
@@ -126,6 +127,10 @@ export class SignInComponent implements OnInit {
 
         if (this.form.controls[formControlName].hasError('samePasswordConfirm')) {
             return 'Vous devez entrer le même mot de passe que précédemment';
+        }
+
+        if (this.form.controls[formControlName].hasError('pattern')) {
+            return 'Vous devez entrer au moins une majuscule, un chiffre et un caractère spécial';
         }
     }
 }
