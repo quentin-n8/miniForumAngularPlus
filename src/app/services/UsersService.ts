@@ -44,6 +44,10 @@ export class UsersService {
         this.emitConnectedUser();
     }
 
+    getUsers(): Observable<User[]> {
+        return this.httpClient.get<User[]>(this.apiUrl + 'api/user', { observe: 'body' });
+    }
+
     createNewUser(user: User): Observable<User> {
         return this.httpClient.post<User>(this.apiUrl + 'api/user', user);
     }
