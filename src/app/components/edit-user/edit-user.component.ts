@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { User } from 'src/app/models/User';
+import { TopicsService } from 'src/app/services/TopicsService';
 import { UsersService } from 'src/app/services/UsersService';
 
 @Component({
@@ -20,6 +21,7 @@ export class EditUserComponent implements OnInit, OnDestroy {
     constructor(
         private formBuilder: FormBuilder,
         private usersService: UsersService,
+        private topicsService: TopicsService,
         private router: Router,
         private snackBar: MatSnackBar
     ) { }
@@ -52,8 +54,14 @@ export class EditUserComponent implements OnInit, OnDestroy {
             }
     
             this.usersService.updateUser(user).subscribe((user: User) => {
-                this.usersService.connectedUser = user;
-                this.usersService.emitConnectedUser();
+                if (localStorage.getItem('connectedUser')) {
+                    this.usersService.saveConnectedUserToLocalStorage(user);
+                } else {
+                    this.usersService.connectedUser = user;
+                    this.usersService.emitConnectedUser();
+                }
+
+                this.topicsService.refreshTopics();
 
                 this.snackBar.open('Votre compte a bien été modifié', 'Fermer', { duration: 3000 });
                 

@@ -44,4 +44,15 @@ export class TopicsService {
     deleteTopic(topic: Topic): Observable<any> {
         return this.httpClient.delete(this.apiUrl + topic.id);
     }
+
+    refreshTopics(): void {
+        this.getTopics().subscribe((topics: Topic[]) => {
+            this.topics = topics.map(topic => {
+                topic.date = new Date(topic.date);
+                return topic;
+            });
+
+            this.emitTopics();
+        });
+    }
 }
