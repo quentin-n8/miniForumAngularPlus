@@ -16,8 +16,6 @@ export class EditUserGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
         return new Observable(observer => {
             this.usersService.connectedUserSubject.subscribe((user: User) => {
-                console.log('here');
-                
                 if (user) {
                     observer.next(true);
                 } else {
