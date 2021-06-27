@@ -22,7 +22,6 @@ export class EditUserGuard implements CanActivate {
                     observer.next(true);
                 } else {
                     observer.next(this.router.parseUrl('/login'));
-                    // this.router.navigateByUrl('login');
                 }
 
                 observer.complete();
