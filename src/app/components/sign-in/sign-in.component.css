@@ -3,5 +3,6 @@ mat-form-field, button {
 }
 
 mat-checkbox {
-    padding-bottom: var(--small-margin);
+    margin-top: var(--small-margin);
+    margin-bottom: var(--large-margin);
 }

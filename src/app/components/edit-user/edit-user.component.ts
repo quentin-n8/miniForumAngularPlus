@@ -107,7 +107,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
                 }
 
                 if (this.form.controls.passwordConfirm.hasError('samePasswordConfirm')) {
-                    this.form.controls.passwordConfirm.updateValueAndValidity();
+                    try {
+                        this.form.controls.passwordConfirm.updateValueAndValidity();
+                    } catch(error) { }
                 }
             }
 
