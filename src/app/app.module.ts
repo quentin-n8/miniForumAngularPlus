@@ -1,14 +1,16 @@
+/* General modules */
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
-import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
-import { routes } from './routes';
+/* Router */
 import { RouterModule } from '@angular/router';
+import { routes } from './routes';
 
+/* Components */
+import { AppComponent } from './app.component';
 import { HomepageComponent } from './components/homepage/homepage.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
 import { LoginComponent } from './components/login/login.component';
@@ -16,18 +18,25 @@ import { SignInComponent } from './components/sign-in/sign-in.component';
 import { LogoutComponent } from './components/logout/logout.component';
 import { TopicComponent } from './components/topic/topic.component';
 
+/* Dialogs */
+import { DialogConfirmComponent } from './dialogs/dialog-confirm.component';
+
+/* Pipes */
 import { TopicInfosPipe } from './pipes/TopicInfos.pipe';
 import { MessageInfosPipe } from './pipes/MessageInfos.pipe';
 
+/* Services */
 import { UsersService } from './services/UsersService';
 import { TopicsService } from './services/TopicsService';
 import { MessagesService } from './services/MessagesService';
 
+/* Angular Material */
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
     declarations: [
@@ -39,7 +48,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         LogoutComponent,
         TopicComponent,
         TopicInfosPipe,
-        MessageInfosPipe
+        MessageInfosPipe,
+        DialogConfirmComponent
     ],
     imports: [
         BrowserModule,
@@ -51,7 +61,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
         MatInputModule,
         MatCheckboxModule,
         MatButtonModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatDialogModule
     ],
     providers: [
         UsersService,

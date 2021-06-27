@@ -17,7 +17,10 @@ import { UsersService } from 'src/app/services/UsersService';
 })
 export class TopicComponent implements OnInit, OnDestroy {
     form: FormGroup;
+
     topic: Topic;
+    topicSubscription: Subscription;
+
     connectedUser: User;
     connectedUserSubscription: Subscription;
 
@@ -31,7 +34,7 @@ export class TopicComponent implements OnInit, OnDestroy {
     ) { }
 
     ngOnInit(): void {
-        this.topicsService.getTopic(this.route.snapshot.params['id']).subscribe((topic: Topic) => {
+        this.topicSubscription = this.topicsService.getTopic(this.route.snapshot.params['id']).subscribe((topic: Topic) => {
             topic.date = new Date(topic.date);
 
             topic.messages = topic.messages.map((message: Message) => {
@@ -105,7 +108,13 @@ export class TopicComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
+        if (this.connectedUserSubscription) {
+            this.connectedUserSubscription.unsubscribe();
+        }
 
+        if (this.topicSubscription) {
+            this.topicSubscription.unsubscribe();
+        }
     }
 
     getErrorMessage(formControlName: string): string|void {

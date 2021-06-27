@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Subscription } from 'rxjs';
+import { DialogConfirmComponent } from 'src/app/dialogs/dialog-confirm.component';
 import { Topic } from 'src/app/models/Topic';
 import { User } from 'src/app/models/User';
 import { TopicsService } from 'src/app/services/TopicsService';
@@ -12,7 +14,7 @@ import { UsersService } from 'src/app/services/UsersService';
     templateUrl: './homepage.component.html',
     styleUrls: ['./homepage.component.css']
 })
-export class HomepageComponent implements OnInit {
+export class HomepageComponent implements OnInit, OnDestroy {
     form: FormGroup;
     filterControl: FormControl;
 
@@ -26,11 +28,14 @@ export class HomepageComponent implements OnInit {
     editedTopic?: Topic;
     editTopicControl: FormControl;
 
+    dialogRefSubscription: Subscription;
+
     constructor(
         private formBuilder: FormBuilder,
         private usersService: UsersService,
         private topicsService: TopicsService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private dialog: MatDialog
     ) { }
 
     ngOnInit(): void {
@@ -93,16 +98,29 @@ export class HomepageComponent implements OnInit {
     }
 
     onDeleteTopic(topic: Topic): void {
-        this.topicsService.deleteTopic(topic).subscribe(response => {
-            this.topicsService.topics = this.topicsService.topics.filter(topicElt => topicElt.id !== topic.id);
-            this.topicsService.emitTopics();
+        const dialogRef = this.dialog.open(DialogConfirmComponent, {
+            data: {
+                title: 'Êtes-vous sûr de vouloir supprimer ce sujet ?',
+                content: 'Cette action est irréversible.',
+                action: 'Supprimer'
+            },
+            autoFocus: false
+        });
 
-            this.editedTopic = undefined;
-
-            this.snackBar.open('Le sujet a bien été supprimé', 'Fermer', { duration: 3000 });
-        }, error => {
-            this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
-        })
+        this.dialogRefSubscription = dialogRef.afterClosed().subscribe(confirm => {
+            if (confirm) {
+                this.topicsService.deleteTopic(topic).subscribe(response => {
+                    this.topicsService.topics = this.topicsService.topics.filter(topicElt => topicElt.id !== topic.id);
+                    this.topicsService.emitTopics();
+        
+                    this.editedTopic = undefined;
+        
+                    this.snackBar.open('Le sujet a bien été supprimé', 'Fermer', { duration: 3000 });
+                }, error => {
+                    this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
+                });
+            }
+        });
     }
 
     onSubmit(): void {
@@ -129,6 +147,16 @@ export class HomepageComponent implements OnInit {
             }, error => {
                 this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
             });
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.dialogRefSubscription) {
+            this.dialogRefSubscription.unsubscribe();
+        }
+
+        if (this.topicsSubscription) {
+            this.topicsSubscription.unsubscribe();
         }
     }
 

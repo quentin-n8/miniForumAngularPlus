@@ -1,0 +1,12 @@
+button {
+    width: 100%
+}
+
+mat-dialog-content {
+    margin-bottom: var(--small-margin);
+}
+
+mat-dialog-actions {
+    flex-wrap: nowrap;
+    padding-top: 0;
+}
