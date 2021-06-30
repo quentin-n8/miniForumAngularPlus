@@ -68,7 +68,10 @@ export class HomepageComponent implements OnInit, OnDestroy {
         this.topicsService.emitTopics();
 
         this.editTopicControl = this.formBuilder.control(['', [Validators.minLength(5), Validators.maxLength(100)]]);
+
+        setInterval(() => {this.topicsService.refreshTopics()}, 30000);
     }
+
 
     onChangeEditedTopic(topic: Topic): void {
         this.editedTopic = (this.editedTopic === topic) ? undefined : topic;

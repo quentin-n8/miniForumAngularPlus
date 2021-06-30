@@ -9,4 +9,7 @@ export interface User {
     oldPassword?: string;
     topics: Topic[];
     messages: Message[];
+    isAdmin?: boolean;
+    admin?: boolean; 
+    connectedUser?: User;
 }

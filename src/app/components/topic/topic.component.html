@@ -10,7 +10,21 @@
         <li *ngFor="let message of topic.messages">
             <h3>{{ message | messageInfos }}</h3>
     
-            <p>{{ message.content }}</p>
+            {{ message.content }}
+
+            <mat-form-field *ngIf="editedMessage === message && connectedUser">
+                <mat-label>Message</mat-label>
+                <input type="text" matInput required [formControl]="editMessageControl">
+                <mat-error *ngIf="editMessageControl.invalid">{{ getErrorMessage(null, editMessageControl) }}</mat-error>
+            </mat-form-field>
+
+            <div class="action-buttons-container" *ngIf="connectedUser">
+                <button mat-raised-button color="primary" *ngIf="editedMessage !== message && message.author.id === connectedUser.id" (click)="onChangeEditedMessage(message)">Modifier</button>
+                <button mat-raised-button color="accent" *ngIf="editedMessage === message && message.author.id === connectedUser.id" (click)="onEditMessage(message)">Enregistrer</button>
+
+                <button mat-raised-button color="warn" *ngIf="message.author.id === connectedUser.id || connectedUser.admin === true" (click)="onDeleteMessage(message)">Supprimer</button>
+            </div>
+
         </li>
     </ul>
 </div>

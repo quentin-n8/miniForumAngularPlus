@@ -28,3 +28,13 @@ ul {
 #topic-infos {
     margin-bottom: var(--small-margin);
 }
+
+.action-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    width: 300px;
+}
+
+.action-buttons-container button:not(.action-buttons-container button:last-child) {
+    margin: 0 var(--small-margin);
+}

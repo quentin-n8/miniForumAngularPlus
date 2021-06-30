@@ -1,0 +1,28 @@
+
+<section>
+    <mat-form-field>
+        <mat-label>Filtrer par nom, id, message ou sujet postés</mat-label>
+        <input type="text" matInput [formControl]="filterControl">
+    </mat-form-field>
+    
+    <ul>
+        <li *ngFor="let user of filteredUsers" [title]="user">
+            <p>{{ user.id }} - {{ user.username }}</p>
+            
+            <mat-form-field *ngIf="editedUser === user && connectedUser">
+                <mat-label>Nom</mat-label>
+                <input type="text" matInput required [formControl]="editUsernameControl">
+                <mat-error *ngIf="editUsernameControl.invalid">{{ getErrorMessage(editUsernameControl) }}</mat-error>
+            </mat-form-field>
+            
+            <mat-checkbox *ngIf="editedUser === user && connectedUser" color="primary" id="admin_checkbox" [checked]="isAdmin" (click)="changeIsAdmin()">isAdmin</mat-checkbox>
+    
+            <div class="action-buttons-container" *ngIf="connectedUser">
+                <button mat-raised-button color="primary" *ngIf="editedUser !== user" (click)="onChangeEditedUser(user)">Modifier</button>
+                <button mat-raised-button color="accent" *ngIf="editedUser === user" (click)="onEditUser(user)">Enregistrer</button>
+
+                <button mat-raised-button color="warn" (click)="onDeleteUser(user)">Supprimer</button>
+            </div>
+        </li>
+    </ul>
+</section>

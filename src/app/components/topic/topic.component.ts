@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { DialogConfirmComponent } from 'src/app/dialogs/dialog-confirm.component';
 import { Message } from 'src/app/models/Message';
 import { Topic } from 'src/app/models/Topic';
 import { User } from 'src/app/models/User';
@@ -20,9 +22,15 @@ export class TopicComponent implements OnInit, OnDestroy {
 
     topic: Topic;
     topicSubscription: Subscription;
+    messageSubject = new Subject<Message>();
 
     connectedUser: User;
     connectedUserSubscription: Subscription;
+
+    editedMessage?: Message;
+    editMessageControl: FormControl;
+
+    dialogRefSubscription: Subscription;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -30,7 +38,8 @@ export class TopicComponent implements OnInit, OnDestroy {
         private topicsService: TopicsService,
         private messagesService: MessagesService,
         private route: ActivatedRoute,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private dialog: MatDialog
     ) { }
 
     ngOnInit(): void {
@@ -54,6 +63,10 @@ export class TopicComponent implements OnInit, OnDestroy {
         });
 
         this.usersService.emitConnectedUser();
+
+        this.editMessageControl = this.formBuilder.control(['', [Validators.minLength(5), Validators.maxLength(3000)]]);
+
+        setInterval(() => {this.onRefreshMessages()}, 30000);
     }
 
     onRefreshMessages(): void {
@@ -117,17 +130,72 @@ export class TopicComponent implements OnInit, OnDestroy {
         }
     }
 
-    getErrorMessage(formControlName: string): string|void {
-        if (this.form.controls[formControlName].hasError('required')) {
+    onChangeEditedMessage(message: Message): void {
+        this.editedMessage = (this.editedMessage === message) ? undefined : message;
+        this.editMessageControl.setValue(message.content);
+    }
+
+    onEditMessage(message: Message): void {
+        if (this.editMessageControl.valid) {
+            this.messagesService.updateMessage(message, this.editMessageControl.value).subscribe((message: Message) => {
+                this.topic.messages = this.topic.messages.map((messageElt: Message) => {
+                    if (messageElt.id === message.id) {
+                        messageElt.content = message.content;
+                    }
+
+                    return messageElt;
+                 });
+
+                 this.messageSubject.next(message);
+
+                 this.snackBar.open('Le contenu du message a bien été modifié', 'Fermer', { duration: 3000 });
+
+                 this.editedMessage = undefined;
+            }, error => {
+                this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
+            });
+        }
+    }
+
+    onDeleteMessage(message: Message): void {
+        const dialogRef = this.dialog.open(DialogConfirmComponent, {
+            data: {
+                title: 'Êtes-vous sûr de vouloir supprimer ce message ?',
+                content: 'Cette action est irréversible.',
+                action: 'Supprimer'
+            },
+            autoFocus: false
+        });
+
+        this.dialogRefSubscription = dialogRef.afterClosed().subscribe(confirm => {
+            if (confirm) {
+                this.messagesService.deleteMessage(message).subscribe(response => {
+                    this.topic.messages = this.topic.messages.filter(messageElt => messageElt.id !== message.id);
+                    this.messageSubject.next(message);
+        
+                    this.editedMessage = undefined;
+        
+                    this.snackBar.open('Le message a bien été supprimé', 'Fermer', { duration: 3000 });
+                }, error => {
+                    this.snackBar.open('Une erreur est survenue. Veuillez vérifier votre saisie', 'Fermer', { duration: 3000 });
+                });
+            }
+        });
+    }
+
+    getErrorMessage(formControlName: string | null, formControlParam?: FormControl): string|void {
+        const formControl = (formControlName !== null) ? this.form.controls[formControlName] : formControlParam;
+
+        if (formControl!.hasError('required')) {
             return 'Ce champ est obligatoire';
         }
 
-        if (this.form.controls[formControlName].hasError('minlength')) {
-            return 'Vous devez entrer au moins ' + this.form.controls[formControlName].getError('minlength').requiredLength + ' caractères';
+        if (formControl!.hasError('minlength')) {
+            return 'Vous devez entrer au moins ' + formControl!.getError('minlength').requiredLength + ' caractères';
         }
 
-        if (this.form.controls[formControlName].hasError('maxlength')) {
-            return 'Vous ne pouvez pas entrer plus de ' + this.form.controls[formControlName].getError('maxlength').requiredLength + ' caractères';
+        if (formControl!.hasError('maxlength')) {
+            return 'Vous ne pouvez pas entrer plus de ' + formControl!.getError('maxlength').requiredLength + ' caractères';
         }
     }
 }

@@ -15,6 +15,10 @@ export class UsersService {
 
     constructor(private httpClient: HttpClient) {
         this.setConnectedUserFromLocalStorage();
+        this.httpClient.get<User[]>(this.apiUrl + 'api/user', { observe: 'body' }).subscribe((users: User[]) => {
+            this.users = users;
+            this.emitUsers();
+        });
     }
 
     emitUsers(): void {
@@ -58,5 +62,9 @@ export class UsersService {
 
     updateUser(user: User): Observable<User> {
         return this.httpClient.patch<User>(this.apiUrl + 'api/user/' + user.id, user);
+    }
+
+    deleteUser(user: User): Observable<User> {
+        return this.httpClient.delete<User>(this.apiUrl + 'api/user/' + user.id);
     }
 }
