@@ -23,6 +23,7 @@ import { ManageUsersComponent } from './components/manage-users/manage-users.com
 import { DialogConfirmComponent } from './dialogs/dialog-confirm.component';
 
 /* Pipes */
+import { Message_bbcodePipe } from './pipes/Message_bbcode.pipe';
 import { TopicInfosPipe } from './pipes/TopicInfos.pipe';
 import { MessageInfosPipe } from './pipes/MessageInfos.pipe';
 
@@ -48,6 +49,7 @@ import { MatDialogModule } from '@angular/material/dialog';
         SignInComponent,
         LogoutComponent,
         TopicComponent,
+        Message_bbcodePipe,
         TopicInfosPipe,
         MessageInfosPipe,
         DialogConfirmComponent,

@@ -2,10 +2,17 @@ mat-form-field, button:not(#topic-title-header button) {
     width: 100%;
 }
 
+.modify_input {
+    width: 30%;
+}
+
 li {
     padding: 10px;
     background-color: rgb(236, 236, 236);
     border: 2px solid var(--primary-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 li:not(li:last-child) {
@@ -29,10 +36,13 @@ ul {
     margin-bottom: var(--small-margin);
 }
 
+.modify_button, .save_button, .delete_button {
+    width: 300px;
+}
+
 .action-buttons-container {
     display: flex;
     justify-content: space-between;
-    width: 300px;
 }
 
 .action-buttons-container button:not(.action-buttons-container button:last-child) {

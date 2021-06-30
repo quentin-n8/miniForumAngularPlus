@@ -66,7 +66,7 @@ export class TopicComponent implements OnInit, OnDestroy {
 
         this.editMessageControl = this.formBuilder.control(['', [Validators.minLength(5), Validators.maxLength(3000)]]);
 
-        setInterval(() => {this.onRefreshMessages()}, 30000);
+        setInterval(() => {this.onRefreshMessages()}, 300000);
     }
 
     onRefreshMessages(): void {
@@ -140,7 +140,7 @@ export class TopicComponent implements OnInit, OnDestroy {
             this.messagesService.updateMessage(message, this.editMessageControl.value).subscribe((message: Message) => {
                 this.topic.messages = this.topic.messages.map((messageElt: Message) => {
                     if (messageElt.id === message.id) {
-                        messageElt.content = message.content;
+                        messageElt = message;
                     }
 
                     return messageElt;
